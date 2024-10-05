@@ -11,10 +11,14 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text highScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
+    private int highScore;
+    private string highScoreName;
+    private string userName;
     
     private bool m_GameOver = false;
 
@@ -22,6 +26,19 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (DataStore.Instance != null) {
+            highScore = DataStore.Instance.highScore;
+            highScoreName = DataStore.Instance.highScoreName;
+            userName = DataStore.Instance.userName;
+            if (string.IsNullOrEmpty(highScoreName)) {
+                highScoreName = userName;
+            }
+            highScoreText.text = $"Best Score : {highScoreName} : {highScore}";
+        } else {
+            Debug.Log("We haven't got stored values!!!");
+            QuitGame();
+        }
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -66,6 +83,14 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
+        
+        if (m_Points > highScore) {
+            highScore = m_Points;
+            DataStore.Instance.highScore = m_Points;
+            DataStore.Instance.highScoreName = userName;
+            highScoreText.text = $"Best Score : {userName} : {m_Points}";
+        }
+
     }
 
     public void GameOver()
@@ -73,4 +98,9 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
+
+    public void QuitGame() {
+        SceneManager.LoadScene(0);
+    }
+
 }

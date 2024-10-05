@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,7 +13,6 @@ public class MenuUIHandler : MonoBehaviour {
 
     public TMP_InputField nameField;
     public TextMeshProUGUI scoreField;
-
     private string userName = "";
     private int highScore = 0;
     private string highScoreName = "";
@@ -39,6 +39,13 @@ public class MenuUIHandler : MonoBehaviour {
                 scoreField.text = highScore + " by " + highScoreName;
             }
 
+        } else if (SceneManager.GetActiveScene().name == "main") {
+
+            if (string.IsNullOrEmpty(highScoreName)) {
+                highScoreName = userName;
+                DataStore.Instance.highScoreName = highScoreName;
+            }
+
         }
     }
 
@@ -57,10 +64,6 @@ public class MenuUIHandler : MonoBehaviour {
         } else {
             SceneManager.LoadScene(1);
         }
-    }
-
-    public void QuitGame() {
-        SceneManager.LoadScene(0);
     }
 
     public void Exit() {

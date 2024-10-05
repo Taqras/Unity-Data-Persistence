@@ -7,6 +7,7 @@ public class DataStore : MonoBehaviour {
     public string userName = "";
     public int highScore = 0;
     public string highScoreName = "";
+
     private void Awake() {
 
         // Singleton
